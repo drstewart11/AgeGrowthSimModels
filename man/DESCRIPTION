@@ -1,0 +1,19 @@
+Package: AgeGrowthSimModels
+Type: Package
+Title: Age and Growth Simulation Models
+Version: 0.1.0
+Author: David R. Stewart <david_stewart@fws.gov>
+Maintainer: David R. Stewart <david_stewart@fws.gov>
+Description: Simulates age and length data from hypothetical fisheries for use in the upcoming AFS Freshwater Fisheries and Analysis - Age and Growth Chapter
+License: What license is it under?
+Encoding: UTF-8
+Imports:
+  doBy,
+  data.table,
+  ggplot2,
+  plyr,
+  tidyr
+LazyData: true
+URL:https://github.com/drstewart11/AgeGrowthSimModels
+Issues: https://github.com/drstewart11/AgeGrowthSimModels/issues
+RoxygenNote: 6.0.1
