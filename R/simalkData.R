@@ -59,7 +59,7 @@ simalkData<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
     #plot length estimates using ggplot2
     df.age=data.frame(Age=ages,Length=round(lt))
 
-    df.na=data.frame(rep(NA,length(lt.na)),Length=round(lt.na))
+    df.na=data.frame(Age=rep(NA,length(lt.na)),Length=round(lt.na))
 
     df=rbind(df.age,df.na)
     #p<-ggplot(data=df,aes(x=Age,y=Length))+
