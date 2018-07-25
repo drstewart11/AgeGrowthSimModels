@@ -4,7 +4,7 @@
 #' @param ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv = von Bert growth parameters, seed=seed
 #' @return Simulated length data
 #' @export
-simlengthVBGF=function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
+simVBGFlength=function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   #Error bounds
   if (length(Linf.mu)>1|missing(Linf.mu)) stop("'Linf.mu'must contain only one value",call.=FALSE)
   if (Linf.mu<1) stop(" 'Linf.mu' must be a positive number",call.=FALSE)
@@ -21,6 +21,7 @@ simlengthVBGF=function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
     seed=123
   }
   set.seed(seed)
+
 
   N=length(ages)
 
@@ -45,9 +46,9 @@ simlengthVBGF=function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   #plot length estimates using ggplot2
   df=data.frame(Age=ages,Length=lt)
   p<-ggplot(data=df,aes(x=Age,y=Length))+
-    geom_point(alpha=0.05,size=4,col="blue")+
+    geom_point(alpha=0.05,size=4,col="black")+
     scale_x_continuous(breaks=1:max(ages))+
-    ylim(0,max(Length)+50)+
+    ylim(0,max(df$Length)+50)+
     ylab("Length (mm)")+
     xlab("Age (yr)")+
     theme_bw()+
