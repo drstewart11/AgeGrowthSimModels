@@ -1,7 +1,7 @@
 #' Individual-based model to simulate age:length data for aged and unaged fish using a von Bertalanffy growth function
 #'
 #' Simulates length and age data for individual fish
-#' @param ages = ages produced by simageData
+#' @param ages = ages simulated from simageData function
 #' @param Linf.mu = Linf mean
 #' @param Linf.cv = CV of Linf
 #' @param k.mu = k mean
