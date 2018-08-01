@@ -29,3 +29,10 @@ Simulated length data
 \description{
 Simulates data to estimate back-calculated lengths of age a for the ith fish
 }
+\references{
+Cardinale, M., and F. Arrhenius. 2001. Is the decrease in growth rate of Atlantic Herring in the Baltic Sea Density-Dependent? A Geostatistical application. Herring: Expectations for aNew Millenium. Alaska Sea Grant College Program AK-SG-01-04:153-197.
+Kurbanov, A.R., and B. Kamilov. 2015. Age and growth of bighead carp (Hypophthalmichthys nobilis R.) in Tudakul reservoir, Uzbekistan. Turkish Journal of Fisheries and Aquatic Sciences 3:229-232.
+Michaletz, P.H., D.M. Nicks, and E.W. Buckner Jr. 2009. Accuracy and precision of estimates of back-calculated channel catfish lengths and growth increments using pectoral spines and otoliths. North American Journal of Fisheries Management 29:1664-1675.
+Munro, A.R. 2004. Identifciation of life history variation in salmonids using otolith microchemistry and scale patterns: implications for illegal introductions and for whirling diesease in Missouri River Rainbow Trout. Dissertation. Montana State University. pp219.
+Zalachowski, W., and K. Wieski. 1998. Growth rate of Bream in Lake Dabie. Journal of Polish Agricultural Universities: http://www.ejpau.media.pl/volume1/issue1/fisheries/art-03.html
+}

@@ -3,6 +3,8 @@
 #' Simulates length frequency data
 #' @param A,Linf.mu,Linf.cv,k,k.cv,t0.mu,t0.cv,Popsize,FM,M,ts,C,bin.num = vonB growth params, Popsize=Population size,FM and M = Fishing and Nat Mortality, ts and C = seasonalized growth parameters, bin.num= The number of bins for histogram, seed=seed
 #' @return Simulated length frequency data
+#' @references
+#' Somers, I.F. 1988. On a seasonally oscillating growth function. Fishbyte 6:8-11.
 #' @export
 simlengthFreq=function(A,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,Popsize,FM,M,ts,C,bin.num,seed){
   #Error bounds

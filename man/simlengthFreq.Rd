@@ -16,3 +16,6 @@ Simulated length frequency data
 \description{
 Simulates length frequency data
 }
+\references{
+Somers, I.F. 1988. On a seasonally oscillating growth function. Fishbyte 6:8-11.
+}
