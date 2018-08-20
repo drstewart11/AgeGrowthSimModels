@@ -68,7 +68,8 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
 
   #Identify length at capture of the ith individual
   lengthC<-apply(Lprev,1,max,na.rm=TRUE)
-
+  lengthC<-round(lengthC)
+  
   #length-otolith regression parameters attained from:
   #Zalachowski et al. 1998; Cardinale et al. 2001; Munro 2004; Michaletz et al. 2009; Kurbanov et al. 2015
 
