@@ -98,9 +98,9 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   namescol=c(paste0("annu", 1:Nage))
   colnames(annu.mat)<-namescol
 
-  dat.new<-cbind(dat,annu.mat)
+  datR<-cbind(dat.new,annu.mat)
   
-  dat<-gather(dat,ageR,annuR,annu1:colnames(dat[ncol(dat)]),factor_key=TRUE)%>%arrange(id,ageR)
+  dat<-gather(datR,ageR,annuR,annu1:colnames(dat[ncol(dat)]),factor_key=TRUE)%>%arrange(id,ageR)
   str_sub(dat$ageR,start=1,end=4)<-""
   dat%<>%mutate(ageR=as.numeric(ageR))%>%
     filter(!is.na(annuR))%>%
