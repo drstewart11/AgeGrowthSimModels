@@ -83,7 +83,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   radC<-beta0.mu+beta1.mu*lengthC+eta.obs
 
   #Store data in data.frame
-  dat<-data.frame(id=1:Ninds,yearC,lengthC,ageC)
+  dat<-data.frame(id=1:Ninds,yearC,lengthC,ageC,radC)
 
   #Create matrix to store measurement of radius of the ith fish of age a
   annu.mat<-matrix(NA,nrow=Ninds,ncol=Nage)
