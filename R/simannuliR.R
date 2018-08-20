@@ -83,7 +83,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   radC<-beta0.mu+beta1.mu*lengthC+eta.obs
 
   #Store data in data.frame
-  dat<-data.frame(id=1:Ninds,yearC,lengthC,ageC,radC)
+  dat.new<-data.frame(id=1:Ninds,yearC,lengthC,ageC,radC)
 
   #Create matrix to store measurement of radius of the ith fish of age a
   annu.mat<-matrix(NA,nrow=Ninds,ncol=Nage)
@@ -94,11 +94,17 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   }
 
   #Assign NA to all measurements greater than age of capture
-  annu.mat[col(annu.mat) > dat$ageC] <- NA
+  annu.mat[col(annu.mat) > dat.new$ageC] <- NA
   namescol=c(paste0("annu", 1:Nage))
   colnames(annu.mat)<-namescol
 
-  dat<-cbind(dat,annu.mat)
-
+  dat.new<-cbind(dat,annu.mat)
+  
+  dat<-gather(dat,ageR,annuR,annu1:colnames(dat[ncol(dat)]),factor_key=TRUE)%>%arrange(id,ageR)
+  str_sub(dat$ageR,start=1,end=4)<-""
+  dat%<>%mutate(ageR=as.numeric(ageR))%>%
+    filter(!is.na(annuR))%>%
+    filter(ageR<=ageC)
+  
   return(dat)
 }
