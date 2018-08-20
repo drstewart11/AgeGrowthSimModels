@@ -62,7 +62,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   }
 
   #Assign NA to all measurements greater than age of capture
-  Lprev[col(Lprev) > dat$ageC] <- NA
+  Lprev[col(Lprev) > ageC] <- NA
   namescol=c(paste0("age", 1:Nage))
   colnames(Lprev)<-namescol
 
