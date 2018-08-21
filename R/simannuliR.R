@@ -109,5 +109,6 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
  
   #Identify year in which a fish in year class will be of age a
   dat$year=as.numeric(as.character(dat$yearC))-(dat$ageC-dat$ageR)
+  dat$yearClass=as.numeric(as.character(dat$yearC))-dat$ageC
   return(dat)
 }
