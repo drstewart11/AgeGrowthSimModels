@@ -106,6 +106,8 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   dat%<>%mutate(ageR=as.numeric(ageR))%>%
     filter(!is.na(annuR))%>%
     filter(ageR<=ageC)
-  
+ 
+  #Identify year in which a fish in year class will be of age a
+  dat$year=as.numeric(as.character(dat$yearC))-(dat$ageC-dat$ageR)
   return(dat)
 }
