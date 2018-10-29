@@ -56,7 +56,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
 
   #Individual-based von B model
   for(i in 1:Ninds){
-    for(j in 1:Nage){
+    for(j in 0:Nage){
       Lprev[i,j]<-make.dummy.inds$Linf[i]*(1-exp(-make.dummy.inds$k[i]*(t[j]-make.dummy.inds$t0[i])))
     }
   }
