@@ -42,7 +42,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   Nage<-max(ageC)
 
   #Matrix to store radius measurements of ages a of the ith fish
-  Lprev=matrix(NA,nrow=Ninds,ncol=Nage)
+  Lprev=matrix(NA,nrow=Ninds,ncol=Nage+1)
 
   #von B parameter estimates to simulate annual growth rate of the ith fish
   make.dummy.inds<-data.frame(
@@ -52,7 +52,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   )
 
   #Time step
-  t=1:Nage
+  t=0:Nage+1
 
   #Individual-based von B model
   for(i in 1:Ninds){
@@ -62,8 +62,8 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   }
 
   #Assign NA to all measurements greater than age of capture
-  Lprev[col(Lprev) > ageC] <- NA
-  namescol=c(paste0("age", 1:Nage))
+  Lprev[col(Lprev) > ageC+1] <- NA
+  namescol=c(paste0("age", 0:Nage))
   colnames(Lprev)<-namescol
 
   #Identify length at capture of the ith individual
@@ -87,22 +87,22 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   dat.new<-data.frame(id=1:Ninds,yearC,lengthC,ageC)
 
   #Create matrix to store measurement of radius of the ith fish of age a
-  annu.mat<-matrix(NA,nrow=Ninds,ncol=Nage)
+  annu.mat<-matrix(NA,nrow=Ninds,ncol=Nage+1)
 
   #Dahl-Lea model to estimate radius measurements based on the length of the ith fish of age a
-  for(j in 1:Nage){
+  for(j in 0:Nage){
     annu.mat[,j]<-radC*(Lprev[,j]/lengthC)
   }
 
   #Assign NA to all measurements greater than age of capture
-  annu.mat[col(annu.mat) > dat.new$ageC] <- NA
-  namescol=c(paste0("annu", 1:Nage))
+  annu.mat[col(annu.mat) > dat.new$ageC+1] <- NA
+  namescol=c(paste0("annu", 0:Nage))
   colnames(annu.mat)<-namescol
   dat.new$radC<-apply(annu.mat, MARGIN=1, FUN=max,na.rm=TRUE)
   datR<-cbind(dat.new,annu.mat)
   
   dat<-gather(datR,ageR,annuR,annu1:colnames(datR[ncol(datR)]),factor_key=TRUE)%>%arrange(id,ageR)
-  str_sub(dat$ageR,start=1,end=4)<-""
+  str_sub(dat$ageR,start=0,end=4)<-""
   dat%<>%mutate(ageR=as.numeric(ageR))%>%
     filter(!is.na(annuR))%>%
     filter(ageR<=ageC)
