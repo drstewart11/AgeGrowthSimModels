@@ -63,7 +63,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   
   #Assign NA to all measurements greater than age of capture
   Lprev[col(Lprev) > ageC] <- NA
-  namescol=c(paste0("age", 0:Nage))
+  namescol=c(paste0("age", 1:Nage))
   colnames(Lprev)<-namescol
 
   #Identify length at capture of the ith individual
@@ -91,7 +91,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   dat.new<-data.frame(id=1:Ninds,yearC,lengthC,ageC)
   
   #Create matrix to store measurement of radius of the ith fish of age a
-  annu.mat<-matrix(NA,nrow=Ninds,ncol=Nage+1)
+  annu.mat<-matrix(NA,nrow=Ninds,ncol=Nage)
   
   #Dahl-Lea model to estimate radius measurements based on the length of the ith fish of age a
   for(j in 1:Nage){
