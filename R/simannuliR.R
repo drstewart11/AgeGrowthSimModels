@@ -35,32 +35,32 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   }
   set.seed(seed)
 
-  #Age data from simageData function
+ #Age data from simageData function
   ageC=ages
   yearC<-rep(format(as.Date(Sys.Date(),"%Y/%m/%d"),"%Y"),length(ageC))
   Ninds<-length(ageC)
   Nage<-max(ageC)
-
+  
   #Matrix to store radius measurements of ages a of the ith fish
   Lprev=matrix(NA,nrow=Ninds,ncol=Nage+1)
-
+  
   #von B parameter estimates to simulate annual growth rate of the ith fish
   make.dummy.inds<-data.frame(
     Linf=Linf.mu*rlnorm(Ninds,0,Linf.cv),
     k=k.mu*rlnorm(Ninds,0,k.cv),
     t0=t0.mu*rlnorm(Ninds,0,t0.cv)
   )
-
+  
   #Time step
   t=0:Nage+1
-
+  
   #Individual-based von B model
   for(i in 1:Ninds){
-    for(j in 0:Nage){
+    for(j in 0:Nage+1){
       Lprev[i,j]<-make.dummy.inds$Linf[i]*(1-exp(-make.dummy.inds$k[i]*(t[j]-make.dummy.inds$t0[i])))
     }
   }
-
+  
   #Assign NA to all measurements greater than age of capture
   Lprev[col(Lprev) > ageC+1] <- NA
   namescol=c(paste0("age", 0:Nage))
@@ -70,30 +70,34 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   lengthC<-apply(Lprev,1,max,na.rm=TRUE)
   lengthC<-round(lengthC)
   
+ #Identify length at capture of the ith individual
+  lengthC<-apply(Lprev,1,max,na.rm=TRUE)
+  lengthC<-round(lengthC)
+  
   #length-otolith regression parameters attained from:
   #Zalachowski et al. 1998; Cardinale et al. 2001; Munro 2004; Michaletz et al. 2009; Kurbanov et al. 2015
-
+  
   beta0.obs<-c(-0.15,-0.146,-1.480,-0.19,-1.48,-0.26,-1.620,0.00,0.40,-0.022,-0.017,-0.006)
   beta1.obs<-c(0.0054,0.06,0.0230,0.0140,0.0230,0.0190,0.0290,0.09,0.006,0.006,0.008,0.004)
   eta.obs<-rnorm(lengthC,0,0.2)
-
+  
   beta0.mu<-mean(rnorm(Ninds,mean(beta0.obs),0.1))
   beta1.mu<-mean(rnorm(Ninds,mean(beta1.obs),0.1))
-
+  
   #Generate asymptotic length of the otolith of the ith fish of age a at capture
   radC<-beta0.mu+beta1.mu*lengthC+eta.obs
-
+  
   #Store data in data.frame
   dat.new<-data.frame(id=1:Ninds,yearC,lengthC,ageC)
-
+  
   #Create matrix to store measurement of radius of the ith fish of age a
   annu.mat<-matrix(NA,nrow=Ninds,ncol=Nage+1)
-
+  
   #Dahl-Lea model to estimate radius measurements based on the length of the ith fish of age a
   for(j in 0:Nage){
     annu.mat[,j]<-radC*(Lprev[,j]/lengthC)
   }
-
+  
   #Assign NA to all measurements greater than age of capture
   annu.mat[col(annu.mat) > dat.new$ageC+1] <- NA
   namescol=c(paste0("annu", 0:Nage))
@@ -101,12 +105,12 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   dat.new$radC<-apply(annu.mat, MARGIN=1, FUN=max,na.rm=TRUE)
   datR<-cbind(dat.new,annu.mat)
   
-  dat<-gather(datR,ageR,annuR,annu1:colnames(datR[ncol(datR)]),factor_key=TRUE)%>%arrange(id,ageR)
+  dat<-gather(datR,ageR,annuR,annu0:colnames(datR[ncol(datR)]),factor_key=TRUE)%>%arrange(id,ageR)
   str_sub(dat$ageR,start=0,end=4)<-""
   dat%<>%mutate(ageR=as.numeric(ageR))%>%
     filter(!is.na(annuR))%>%
     filter(ageR<=ageC)
- 
+  
   #Identify year in which a fish in year class will be of age a
   dat$year=as.numeric(as.character(dat$yearC))-(dat$ageC-dat$ageR)
   dat$yearClass=as.numeric(as.character(dat$yearC))-dat$ageC
