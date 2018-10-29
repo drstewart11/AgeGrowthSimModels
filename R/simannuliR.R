@@ -105,7 +105,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   dat.new$radC<-apply(annu.mat, MARGIN=1, FUN=max,na.rm=TRUE)
   datR<-cbind(dat.new,annu.mat)
   
-  dat<-gather(datR,ageR,annuR,annu0:colnames(datR[ncol(datR)]),factor_key=TRUE)%>%arrange(id,ageR)
+  dat<-gather(datR,ageR,annuR,annu1:colnames(datR[ncol(datR)]),factor_key=TRUE)%>%arrange(id,ageR)
   str_sub(dat$ageR,start=1,end=4)<-""
   dat%<>%mutate(ageR=as.numeric(ageR))%>%
     filter(!is.na(annuR))%>%
