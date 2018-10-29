@@ -28,7 +28,7 @@ simageData<-function(A,M,FM,f.vul,sd.fvul,s.vul,sd.svul,Popsize,seed,fishery=TRU
 
 
   #Number of age classes from 1 to max(age)
-  age=0:A
+  age=1:A
 
   #Fishery selectivity: Selectivity for the fishery is a logistic function
   va = (1+exp(-(age-f.vul)/sd.fvul))^-1
