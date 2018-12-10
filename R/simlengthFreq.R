@@ -82,7 +82,7 @@ for(t in 1:1){
 
   lengthT[,1]<-lt
 
-  deltaLengthatTT[,1]<-(make.dummy.inds$Linf-lengthT[,1])*
+  deltaLengthatT[,1]<-(make.dummy.inds$Linf-lengthT[,1])*
     (1-exp(-(
       make.dummy.inds$k*(t2-t1)
       -(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t1-lfq.inds$ts)))
