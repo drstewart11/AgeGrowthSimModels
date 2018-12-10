@@ -70,7 +70,7 @@ lfq.inds<-data.frame(
 )
 
 #Empty arrray's to store seasonal changes in length
-deltaT=array(0,dim=c(Ninds,13))
+deltaLengthatT=array(0,dim=c(Ninds,13))
 lengthT=array(0,dim=c(Ninds,13))
 
 #Loop to assign initial change in lengths (deltaT)
@@ -82,7 +82,7 @@ for(t in 1:1){
 
   lengthT[,1]<-lt
 
-  deltaT[,1]<-(make.dummy.inds$Linf-lengthT[,1])*
+  deltaLengthatTT[,1]<-(make.dummy.inds$Linf-lengthT[,1])*
     (1-exp(-(
       make.dummy.inds$k*(t2-t1)
       -(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t1-lfq.inds$ts)))
@@ -91,24 +91,24 @@ for(t in 1:1){
 }
 #Second loop to model delta length across months (13)
 for(t in 2:13){
-  deltaT[,t]<-(make.dummy.inds$Linf-lengthT[,t-1])*
+  deltaLengthatT[,t]<-(make.dummy.inds$Linf-lengthT[,t-1])*
     (1-exp(-(
       make.dummy.inds$k*(t2-t1)
       -(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t1-lfq.inds$ts)))
       +(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t2-lfq.inds$ts)))
     )))
-  lengthT[,t]<-lengthT[,t-1]+deltaT[,t]
+  lengthT[,t]<-lengthT[,t-1]+deltaLengthatT[,t]
 }
 
 #Format data to construct histogram through time
 
 length.range<-range(unlist(lengthT))
-lengthClass<-seq(floor(length.range[1]),ceiling(length.range[2])+1)
-lengthMids <- lengthClass[-length(lengthClass)] + bin.num/2
+lengthTClass<-seq(floor(length.range[1]),ceiling(length.range[2])+1)
+lengthTMids <- lengthTClass[-length(lengthTClass)] + bin.num/2
 
 #Histogram of counts for each age class through time t=1:13
 freq=apply(lengthT,2,FUN=function(x){
-  hist(x,breaks=lengthClass,plot=FALSE,include.lowest=TRUE)$counts})
+  hist(x,breaks=lengthTClass,plot=FALSE,include.lowest=TRUE)$counts})
 
 
 timemin=as.Date("2018-01-01");timemax=as.Date("2019-01-01");dates=seq(timemin,timemax,'month')
@@ -116,7 +116,7 @@ dates<-as.Date(dates,"%Y-%d-%m")
 
 #Create list object to store dates, midLengths, and histogram frequencies to use in TropFishR
 lfq.dat<-list(dates=dates,
-              midLengths=lengthMids,
+              midLengths=lengthTMids,
               catch=as.matrix(freq))
 
 return(lfq.dat)
