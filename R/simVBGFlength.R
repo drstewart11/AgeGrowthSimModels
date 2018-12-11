@@ -57,5 +57,5 @@ simVBGFlength=function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
           axis.text = element_text(size=20),
           axis.title = element_text(size=20))
   print(p)
-  return(round(lt))
+  return(lt)
 }
