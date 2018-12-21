@@ -44,7 +44,11 @@ Na=round(Popsize*exp(-Za*ages))
 
 Ninds=sum(Na)
 
-
+#Create empty vectors for each parameter
+  Linf=rep(0,Ninds)
+  k=rep(0,Ninds)
+  t0=rep(0,Ninds)
+  
 #Create dummy params for each individual of fish age a
 make.dummy.inds<-data.frame(
   Linf=Linf.mu*rlnorm(Ninds,0,Linf.cv),
