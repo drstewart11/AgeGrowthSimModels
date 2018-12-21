@@ -31,7 +31,12 @@ simalkData<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
 
 
     N=length(ages)
-
+    
+    #Create empty vector to store Linf, k, and t0 parameter estimates for each individual
+    Linf=rep(0,N)
+    k=rep(0,N)
+    t0=rep(0,N)
+    
     #Create dummy params for each individual of fish age a
     make.dummy.inds<-data.frame(
       Linf=Linf.mu*rlnorm(N,0,Linf.cv),
