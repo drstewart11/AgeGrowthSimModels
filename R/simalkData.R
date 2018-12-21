@@ -33,9 +33,9 @@ simalkData<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
     N=length(ages)
     
     #Create empty vector to store Linf, k, and t0 parameter estimates for each individual
-    #Linf=rep(0,N)
-    #k=rep(0,N)
-    #t0=rep(0,N)
+    Linf=rep(0,N)
+    k=rep(0,N)
+    t0=rep(0,N)
     
     #Create dummy params for each individual of fish age a
     make.dummy.inds<-data.frame(
@@ -61,7 +61,7 @@ simalkData<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
     }
 
 
-    #plot length estimates using ggplot2
+    #Combine age and unaged sample
     df.age=data.frame(Age=ages,Length=round(lt))
 
     df.na=data.frame(Age=rep(NA,length(lt.na)),Length=round(lt.na))
