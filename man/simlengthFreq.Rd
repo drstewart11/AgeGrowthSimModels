@@ -5,7 +5,7 @@
 \title{Individual-based model to simulate age:length and length:frequency data from a von Bertalanffy growth function}
 \usage{
 simlengthFreq(A, Linf.mu, Linf.cv, k.mu, k.cv, t0.mu, t0.cv, Popsize, FM, M, ts,
-  C, bin.num, seed)
+  C, bin.num, type = c("monthly", "annual"), seed)
 }
 \arguments{
 \item{A, Linf.mu, Linf.cv, k, k.cv, t0.mu, t0.cv, Popsize, FM, M, ts, C, bin.num}{= vonB growth params, Popsize=Population size,FM and M = Fishing and Nat Mortality, ts and C = seasonalized growth parameters, bin.num= The number of bins for histogram, seed=seed}

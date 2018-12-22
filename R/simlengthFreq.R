@@ -6,7 +6,7 @@
 #' @references
 #' Somers, I.F. 1988. On a seasonally oscillating growth function. Fishbyte 6:8-11.
 #' @export
-simlengthFreq=function(A,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,Popsize,FM,M,ts,C,bin.num,seed){
+simlengthFreq=function(A,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,Popsize,FM,M,ts,C,bin.num,type=c("monthly","annual"),seed){
   #Error bounds
   if (length(Linf.mu)>1|missing(Linf.mu)) stop("'Linf.mu'must contain only one value",call.=FALSE)
   if (Linf.mu<1) stop(" 'Linf.mu' must be a positive number",call.=FALSE)
@@ -44,11 +44,7 @@ Na=round(Popsize*exp(-Za*ages))
 
 Ninds=sum(Na)
 
-#Create empty vectors for each parameter
-  Linf=rep(0,Ninds)
-  k=rep(0,Ninds)
-  t0=rep(0,Ninds)
-  
+
 #Create dummy params for each individual of fish age a
 make.dummy.inds<-data.frame(
   Linf=Linf.mu*rlnorm(Ninds,0,Linf.cv),
@@ -73,8 +69,9 @@ lfq.inds<-data.frame(
   C=rep(C,Ninds)
 )
 
+if(type=="monthly"){
 #Empty arrray's to store seasonal changes in length
-deltaLengthatT=array(0,dim=c(Ninds,13))
+deltaT=array(0,dim=c(Ninds,13))
 lengthT=array(0,dim=c(Ninds,13))
 
 #Loop to assign initial change in lengths (deltaT)
@@ -86,7 +83,7 @@ for(t in 1:1){
 
   lengthT[,1]<-lt
 
-  deltaLengthatT[,1]<-(make.dummy.inds$Linf-lengthT[,1])*
+  deltaT[,1]<-(make.dummy.inds$Linf-lengthT[,1])*
     (1-exp(-(
       make.dummy.inds$k*(t2-t1)
       -(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t1-lfq.inds$ts)))
@@ -95,24 +92,23 @@ for(t in 1:1){
 }
 #Second loop to model delta length across months (13)
 for(t in 2:13){
-  deltaLengthatT[,t]<-(make.dummy.inds$Linf-lengthT[,t-1])*
+  deltaT[,t]<-(make.dummy.inds$Linf-lengthT[,t-1])*
     (1-exp(-(
       make.dummy.inds$k*(t2-t1)
       -(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t1-lfq.inds$ts)))
       +(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t2-lfq.inds$ts)))
     )))
-  lengthT[,t]<-lengthT[,t-1]+deltaLengthatT[,t]
+  lengthT[,t]<-lengthT[,t-1]+deltaT[,t]
 }
-
 #Format data to construct histogram through time
 
 length.range<-range(unlist(lengthT))
-lengthTClass<-seq(floor(length.range[1]),ceiling(length.range[2])+1)
-lengthTMids <- lengthTClass[-length(lengthTClass)] + bin.num/2
+lengthClass<-seq(floor(length.range[1]),ceiling(length.range[2])+1)
+lengthMids <- lengthClass[-length(lengthClass)] + bin.num/2
 
 #Histogram of counts for each age class through time t=1:13
 freq=apply(lengthT,2,FUN=function(x){
-  hist(x,breaks=lengthTClass,plot=FALSE,include.lowest=TRUE)$counts})
+  hist(x,breaks=lengthClass,plot=FALSE,include.lowest=TRUE)$counts})
 
 
 timemin=as.Date("2018-01-01");timemax=as.Date("2019-01-01");dates=seq(timemin,timemax,'month')
@@ -120,9 +116,50 @@ dates<-as.Date(dates,"%Y-%d-%m")
 
 #Create list object to store dates, midLengths, and histogram frequencies to use in TropFishR
 lfq.dat<-list(dates=dates,
-              midLengths=lengthTMids,
+              midLengths=lengthMids,
               catch=as.matrix(freq))
-
 return(lfq.dat)
+}else if(type=="annual"){
+  lengthT<-matrix(NA,nrow=length(lt),ncol=10)
+  for(i in 1:length(lt)){
+    lengthT[,]<-lt[]
+  }
+  length.range<-range(unlist(lengthT))
+  lengthClass<-seq(floor(length.range[1]),ceiling(length.range[2])+1)
+  lengthMids <- lengthClass[-length(lengthClass)] + bin.num/2
+
+  #Histogram of counts for each age class through time t=1:13
+  freq=apply(lengthT,2,FUN=function(x){
+    hist(x,breaks=lengthClass,plot=FALSE,include.lowest=TRUE)$counts})
+
+  timemin=as.Date("2018-01-01");timemax=as.Date("2027-01-01");dates=seq(timemin,timemax,'year')
+  dates<-as.Date(dates,"%Y-%d-%m")
+
+  #Create list object to store dates, midLengths, and histogram frequencies to use in TropFishR
+  lfq.dat<-list(dates=dates,
+                midLengths=lengthMids,
+                catch=as.matrix(freq))
+  return(lfq.dat)
+}
+
+#Format data to construct histogram through time
+#length.range<-range(unlist(lengthT))
+#lengthClass<-seq(floor(length.range[1]),ceiling(length.range[2])+1)
+#lengthMids <- lengthClass[-length(lengthClass)] + bin.num/2
+
+#Histogram of counts for each age class through time t=1:13
+#freq=apply(lengthT,2,FUN=function(x){
+#  hist(x,breaks=lengthClass,plot=FALSE,include.lowest=TRUE)$counts})
+
+
+#timemin=as.Date("2018-01-01");timemax=as.Date("2019-01-01");dates=seq(timemin,timemax,'month')
+#dates<-as.Date(dates,"%Y-%d-%m")
+
+#Create list object to store dates, midLengths, and histogram frequencies to use in TropFishR
+#lfq.dat<-list(dates=dates,
+#              midLengths=lengthMids,
+#              catch=as.matrix(freq))
+
+
 }
 

@@ -60,14 +60,14 @@ simageData<-function(A,M,FM,f.vul,sd.fvul,s.vul,sd.svul,Popsize,seed,fishery=TRU
     age_sample = sample(age,sum(la),replace=TRUE,prob=la/sum(la))
   }
 
-  #par(mfrow=c(3,1),mar=c(3,5,0.5,0.5),oma=c(.2,.2,.2,.2),mgp=c(2,0.5,0),cex=1,tck=-0.02)
-  #plot(age,Na,"h",col="red",lwd=10,ylab="",xlab="",las=1,bty="n",xlim=c(0,A),cex.axis=1.5,cex.lab=1.5)
-  #mtext(side=2,"No.in the pop.",cex=1.5,line=3.5)
-  #plot(age,Ca,"h",col="blue",lwd=10,ylab="",xlab="",las=1,bty="n",xlim=c(0,A),cex.axis=1.5,cex.lab=1.5)
-  #mtext(side=2,"No. in fishery",cex=1.5,line=3.5)
-  #plot(age,la,"h",col="black",lwd=10,ylab="",xlab="",las=1,bty="n",xlim=c(0,A),cex.axis=1.5,cex.lab=1.5)
-  #mtext(side=2,"No. in survey",cex=1.5,line=3.5)
-  #mtext(side=1,"Age (yr)",cex=1.5,line=1.5)
+  par(mfrow=c(3,1),mar=c(3,5,0.5,0.5),oma=c(.2,.2,.2,.2),mgp=c(2,0.5,0),cex=1,tck=-0.02)
+  plot(age,Na,"h",col="red",lwd=10,ylab="",xlab="",las=1,bty="n",xlim=c(0,A),cex.axis=1.5,cex.lab=1.5)
+  mtext(side=2,"No.in the pop.",cex=1.5,line=3.5)
+  plot(age,Ca,"h",col="blue",lwd=10,ylab="",xlab="",las=1,bty="n",xlim=c(0,A),cex.axis=1.5,cex.lab=1.5)
+  mtext(side=2,"No. in fishery",cex=1.5,line=3.5)
+  plot(age,la,"h",col="black",lwd=10,ylab="",xlab="",las=1,bty="n",xlim=c(0,A),cex.axis=1.5,cex.lab=1.5)
+  mtext(side=2,"No. in survey",cex=1.5,line=3.5)
+  mtext(side=1,"Age (yr)",cex=1.5,line=1.5)
   ages=age_sample
   return(ages)
 }

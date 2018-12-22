@@ -1,10 +1,18 @@
-#' Individual-based model to simulate age:length data from a von Bertalanffy growth function
+#' Individual-based model to simulate mean length at annulus for the ith fish of age a
 #'
-#' Simulates length data for individual i of age a
-#' @param ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv = von Bert growth parameters, seed=seed
+#' Simulates data to estimate back-calculated lengths of age a for the ith fish
+#' @param ages = ages simulated from simageData function
+#' @param Linf.mu = Linf mean
+#' @param Linf.cv = CV of Linf
+#' @param k.mu = k mean
+#' @param k.cv = CV of k
+#' @param t0.mu = t0 mean
+#' @param t0.cv = CV of t0
+#' @param seed = seed
+#' @references
 #' @return Simulated length data
 #' @export
-simVBGFlength=function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
+simElapsed<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   #Error bounds
   if (length(Linf.mu)>1|missing(Linf.mu)) stop("'Linf.mu'must contain only one value",call.=FALSE)
   if (Linf.mu<1) stop(" 'Linf.mu' must be a positive number",call.=FALSE)
@@ -22,40 +30,36 @@ simVBGFlength=function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   }
   set.seed(seed)
 
-
-  N=length(ages)
+  Ninds=length(ages)
 
   #Create dummy params for each individual of fish age a
   make.dummy.inds<-data.frame(
-    Linf=Linf.mu*rlnorm(N,0,Linf.cv),
-    k=k.mu*rlnorm(N,0,k.cv),
-    t0=t0.mu*rlnorm(N,0,t0.cv),
-    ages=ages
-    )
-
+    Linf=Linf.mu*rlnorm(Ninds,0,Linf.cv),
+    k=k.mu*rlnorm(Ninds,0,k.cv),
+    t0=t0.mu*rlnorm(Ninds,0,t0.cv),
+    #randomly extract individual ages from the age structured population model
+    age.inds=ages,
+    deltaT=rgamma(Ninds,shape=0.7,scale=2)
+  )
 
   #Create empty vector to store initial predicted length for the ith individual of age a using von Bertalanffy function
-  lt=rep(0,N)
+  lt=rep(0,Ninds)
 
   #Individual-based von Bertalanffy growth model to predicted initial lengths for individuals of age a
-  for(i in 1:N){
-    lt[i]<-make.dummy.inds$Linf[i]*(1-exp(-make.dummy.inds$k[i]*(make.dummy.inds$ages[i]-make.dummy.inds$t0[i])))
+  for(i in 1:Ninds){
+    lt[i]<-make.dummy.inds$Linf[i]*(1-exp(-make.dummy.inds$k[i]*(make.dummy.inds$age.inds[i]-make.dummy.inds$t0[i])))
   }
 
+  #Empty arrray's to store seasonal changes in length
+  lengthT=array(0,dim=c(Ninds,nperiod=2))
 
-  #plot length estimates using ggplot2
-  df=data.frame(Age=ages,Length=lt)
-  p<-ggplot(data=df,aes(x=Age,y=Length))+
-    geom_point(alpha=0.05,size=4,col="black")+
-    scale_x_continuous(breaks=1:max(ages))+
-    ylim(0,max(df$Length)+50)+
-    ylab("Length (mm)")+
-    xlab("Age (yr)")+
-    theme_bw()+
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          axis.text = element_text(size=20),
-          axis.title = element_text(size=20))
-  print(p)
-  return(round(lt))
+  #Initial lengths
+  lengthT[,1]<-lt
+
+  #Difference
+  deltaLt=(make.dummy.inds$Linf-lengthT[,1])*(1-exp(-make.dummy.inds$k*make.dummy.inds$deltaT))
+  lengthT[,2]<-lengthT[,1]+deltaLt
+
+  lengthT=cbind(lengthT,make.dummy.inds$deltaT)
+  return(lengthT)
 }
