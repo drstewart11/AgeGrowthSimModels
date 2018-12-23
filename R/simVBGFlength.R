@@ -45,17 +45,17 @@ simVBGFlength=function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
 
   #plot length estimates using ggplot2
   df=data.frame(Age=ages,Length=lt)
-  p<-ggplot(data=df,aes(x=Age,y=Length))+
-    geom_point(alpha=0.05,size=4,col="black")+
-    scale_x_continuous(breaks=1:max(ages))+
-    ylim(0,max(df$Length)+50)+
-    ylab("Length (mm)")+
-    xlab("Age (yr)")+
-    theme_bw()+
-    theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          axis.text = element_text(size=20),
-          axis.title = element_text(size=20))
-  print(p)
+  #p<-ggplot(data=df,aes(x=Age,y=Length))+
+  #  geom_point(alpha=0.05,size=4,col="black")+
+  #  scale_x_continuous(breaks=1:max(ages))+
+  #  ylim(0,max(df$Length)+50)+
+  #  ylab("Length (mm)")+
+  #  xlab("Age (yr)")+
+  #  theme_bw()+
+  #  theme(panel.grid.major = element_blank(),
+  #        panel.grid.minor = element_blank(),
+  #        axis.text = element_text(size=20),
+  #        axis.title = element_text(size=20))
+  #print(p)
   return(round(lt))
 }
