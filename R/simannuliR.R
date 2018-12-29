@@ -43,7 +43,12 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
 
   #Matrix to store radius measurements of ages a of the ith fish
   Lprev=matrix(NA,nrow=Ninds,ncol=Nage)
-
+  
+  #Create empty vecotr for parameters Linf, k, and t0
+  Linf=rep(0,Ninds)
+  k=rep(0,Ninds)
+  t0=rep(0,Ninds)
+  
   #von B parameter estimates to simulate annual growth rate of the ith fish
   make.dummy.inds<-data.frame(
     Linf=Linf.mu*rlnorm(Ninds,0,Linf.cv),
@@ -61,6 +66,7 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
     }
   }
 
+  dat<-data.frame(id=1:Ninds,yearC,ageC)
   #Assign NA to all measurements greater than age of capture
   Lprev[col(Lprev) > dat$ageC] <- NA
   namescol=c(paste0("age", 1:Nage))
@@ -68,7 +74,10 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
 
   #Identify length at capture of the ith individual
   lengthC<-apply(Lprev,1,max,na.rm=TRUE)
-
+  
+  #Add lengthC to dat data.frame
+  dat<-cbind(dat,lengthC)
+  
   #length-otolith regression parameters attained from:
   #Zalachowski et al. 1998; Cardinale et al. 2001; Munro 2004; Michaletz et al. 2009; Kurbanov et al. 2015
 
@@ -82,8 +91,8 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   #Generate asymptotic length of the otolith of the ith fish of age a at capture
   radC<-beta0.mu+beta1.mu*lengthC+eta.obs
 
-  #Store data in data.frame
-  dat<-data.frame(id=1:Ninds,yearC,lengthC,ageC)
+  #Store radC data in dat data.frame
+  dat<-cbind(dat,radC)
 
   #Create matrix to store measurement of radius of the ith fish of age a
   annu.mat<-matrix(NA,nrow=Ninds,ncol=Nage)
@@ -92,13 +101,20 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   for(j in 1:Nage){
     annu.mat[,j]<-radC*(Lprev[,j]/lengthC)
   }
-
-  #Assign NA to all measurements greater than age of capture
-  annu.mat[col(annu.mat) > dat$ageC] <- NA
-  namescol=c(paste0("annu", 1:Nage))
+  namescol=1:Nage
   colnames(annu.mat)<-namescol
-
   dat<-cbind(dat,annu.mat)
+  
+  #Convert from wide to long format (i.e., one-measurement per line)
+  #Need package reshape2
+  dat<-melt(dat,id.vars=c("id","yearC","lengthC","ageC","radC"),variable.name="ageR",value.name="annuR")
+  dat<-na.omit(dat[order(dat$id),])
+  dat$ageR=as.integer(dat$ageR)
+  dat$year=as.numeric(as.character(dat$yearC))-(as.numeric(dat$ageC)-as.numeric(dat$ageR))
+  dat$yearClass=as.numeric(as.character(dat$yearC))-as.numeric(dat$ageC)
 
+  rownames(dat)<-NULL
+  return(dat)
+  
   return(dat)
 }
