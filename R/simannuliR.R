@@ -44,10 +44,11 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
   #Matrix to store radius measurements of ages a of the ith fish
   Lprev=matrix(NA,nrow=Ninds,ncol=Nage)
   
-  #Create empty vecotr for parameters Linf, k, and t0
-  Linf=rep(0,Ninds)
-  k=rep(0,Ninds)
-  t0=rep(0,Ninds)
+  #Create empty vector for parameters Linf, k, and t0
+  #Commented out to create consistent examples
+  #Linf=rep(0,Ninds)
+  #k=rep(0,Ninds)
+  #t0=rep(0,Ninds)
   
   #von B parameter estimates to simulate annual growth rate of the ith fish
   make.dummy.inds<-data.frame(
