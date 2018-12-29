@@ -115,6 +115,4 @@ simannuliR<-function(ages,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,seed){
 
   rownames(dat)<-NULL
   return(dat)
-  
-  return(dat)
 }
