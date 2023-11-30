@@ -74,31 +74,32 @@ if(type=="monthly"){
 deltaT=array(0,dim=c(Ninds,13))
 lengthT=array(0,dim=c(Ninds,13))
 
-#Loop to assign initial change in lengths (deltaT)
 for(t in 1:1){
-  #monthly time increment; #daily time increment would be 1/365
-  t.incr=1/12
-  t2=t
-  t1=1-t.incr
+  #monthly time increment;
+  t1 = (t - 1) * t.incr
+  t2 = t * t.incr
 
-  lengthT[,1]<-lt
+  lengthT[,1] <- lt
 
-  deltaT[,1]<-(make.dummy.inds$Linf-lengthT[,1])*
-    (1-exp(-(
-      make.dummy.inds$k*(t2-t1)
-      -(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t1-lfq.inds$ts)))
-      +(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t2-lfq.inds$ts)))
-    )))
+  deltaT[,1] <- (make.dummy.inds$Linf - lengthT[,1]) * 
+                (1 - exp(-(
+                  make.dummy.inds$k * t.incr
+                  - ((lfq.inds$C * make.dummy.inds$k) / (2 * pi)) * sin(2 * pi * (t1 - lfq.inds$ts))
+                  + ((lfq.inds$C * make.dummy.inds$k) / (2 * pi)) * sin(2 * pi * (t2 - lfq.inds$ts))
+                )))
 }
 #Second loop to model delta length across months (13)
 for(t in 2:13){
-  deltaT[,t]<-(make.dummy.inds$Linf-lengthT[,t-1])*
-    (1-exp(-(
-      make.dummy.inds$k*(t2-t1)
-      -(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t1-lfq.inds$ts)))
-      +(((lfq.inds$C*make.dummy.inds$k)/(2*pi))*sin(2*pi*(t2-lfq.inds$ts)))
-    )))
-  lengthT[,t]<-lengthT[,t-1]+deltaT[,t]
+  t1 = (t - 1) * t.incr
+  t2 = t * t.incr
+  
+  deltaT[,t] <- (make.dummy.inds$Linf - lengthT[,t-1]) * 
+                (1 - exp(-(
+                  make.dummy.inds$k * t.incr
+                  - ((lfq.inds$C * make.dummy.inds$k) / (2 * pi)) * sin(2 * pi * (t1 - lfq.inds$ts))
+                  + ((lfq.inds$C * make.dummy.inds$k) / (2 * pi)) * sin(2 * pi * (t2 - lfq.inds$ts))
+                )))
+  lengthT[,t] <- lengthT[,t-1] + deltaT[,t]
 }
 #Format data to construct histogram through time
 
