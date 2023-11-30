@@ -6,7 +6,7 @@
 #' @references
 #' Somers, I.F. 1988. On a seasonally oscillating growth function. Fishbyte 6:8-11.
 #' @export
-simlengthFreq=function(A,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,Popsize,FM,M,ts,C,bin.num,type=c("monthly","annual"),seed){
+simlengthFreq=function(A,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,Popsize,FM,M,ts.mu,ts.cv,C.mu,C.cv,bin.num,type=c("monthly","annual"),seed){
   #Error bounds
   if (length(Linf.mu)>1|missing(Linf.mu)) stop("'Linf.mu'must contain only one value",call.=FALSE)
   if (Linf.mu<1) stop(" 'Linf.mu' must be a positive number",call.=FALSE)
@@ -24,8 +24,10 @@ simlengthFreq=function(A,Linf.mu,Linf.cv,k.mu,k.cv,t0.mu,t0.cv,Popsize,FM,M,ts,C
   if (length(M)>1|missing(M)) stop(" 'M' must contain only one value", call.=FALSE)
   if (Popsize<0) stop(" 'Popsize' must be a positive number",call.=FALSE)
   if (M<0) stop(" 'M' must be a positive number",call.=FALSE)
-  if (length(ts)>1|missing(ts)) stop(" 'ts' must contain only one value", call.=FALSE)
-  if (length(C)>1|missing(C)) stop(" 'C' must contain only one value", call.=FALSE)
+  if (length(ts.mu)>1|missing(ts.mu)) stop(" 'ts.mu' must contain only one value", call.=FALSE)
+  if (length(ts.cv)>1|missing(ts.cv)) stop(" 'ts.cv' must contain only one value", call.=FALSE)
+  if (length(C.mu)>1|missing(C.mu)) stop(" 'C.mu' must contain only one value", call.=FALSE)
+  if (length(C.cv)>1|missing(C.cv)) stop(" 'C.cv' must contain only one value", call.=FALSE)
   if (length(bin.num)>1|missing(bin.num)) stop(" 'bin.num' must contain only one value, call.=FALSE")
   if(missing(seed)){
     seed=123
@@ -40,9 +42,15 @@ ages=1:A
 Za=FM+M
 
 #Age structured population model; The total number of fish of age a
-Na=round(Popsize*exp(-Za*ages))
+Na = round(Popsize * exp(-Za * ages))
+  
+# Normalize Na so the sum equals Popsize
+Na_normalized = round(Na * Popsize / sum(Na))
 
-Ninds=sum(Na)
+# Now the sum should be equal to Popsize
+Ninds = sum(Na_normalized)
+Na = Na_normalized
+
 
 
 #Create dummy params for each individual of fish age a
@@ -65,8 +73,8 @@ for(i in 1:Ninds){
 
 #Parameters for seasonal growth model
 lfq.inds<-data.frame(
-  ts=rep(ts,Ninds),
-  C=rep(C,Ninds)
+  ts=ts.mu*rlnorm(Ninds,0,ts.cv),
+  C=C.mu*rlnorm(Ninds,0,C.cv)
 )
 
 if(type=="monthly"){
